@@ -769,66 +769,233 @@
     }
   </style>
 
-<style>
-/* AD CHAT */
-#adchat{
-  margin-top:40px;
-  padding:25px;
-  background:linear-gradient(135deg,#0f9b8e,#1e90ff);
-  border-radius:24px;
-  box-shadow:0 15px 40px rgba(0,0,0,.12);
-  color:#fff;
-}
+  <style>
+    .chat-trigger-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .chat-trigger-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(37, 99, 235, 0.45);
+    }
+    .chat-trigger-btn .pulse-badge {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px #22c55e;
+      animation: pulse 1.5s infinite;
+    }
 
-#adchat h2{
-  margin-top:0;
-  font-size:2rem;
-}
+    #adchat {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      width: 380px;
+      max-width: calc(100vw - 48px);
+      height: 480px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #adchat.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
 
-#chatBox{
-  height:320px;
-  overflow-y:auto;
-  background:rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:15px;
-  margin-bottom:15px;
-  backdrop-filter:blur(10px);
-}
+    body.dark #adchat {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 55px rgba(0, 0, 0, 0.45);
+    }
 
-.chat-message{
-  background:#dcf8c6;
-  color:#111;
-  padding:10px 14px;
-  margin:10px 0;
-  border-radius:14px;
-  width:fit-content;
-  max-width:80%;
-}
+    .chat-header {
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      padding: 16px 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .chat-close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+      transition: background 0.2s;
+    }
+    .chat-close-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
 
-.chat-input-row{
-  display:flex;
-  gap:10px;
-}
+    /* Auth Panel View */
+    .chat-auth-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      gap: 14px;
+    }
+    .chat-auth-view p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .chat-auth-view input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 2px;
+      outline: none;
+      background: white;
+      color: var(--text);
+    }
+    body.dark .chat-auth-view input {
+      background: #0f172a;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .chat-auth-view button {
+      width: 100%;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      background: #2563eb;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-#msg{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  outline:none;
-  font-size:1rem;
-}
+    /* Main Chat View Hidden Initially */
+    .chat-main-view {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-#adchat button{
-  border:none;
-  padding:14px 22px;
-  border-radius:14px;
-  background:#fff;
-  color:#1e90ff;
-  font-weight:700;
-  cursor:pointer;
-}
-</style>
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    body.dark #chatBox {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .chat-message {
+      background: white;
+      color: #0f172a;
+      padding: 10px 16px;
+      border-radius: 16px;
+      border-top-left-radius: 4px;
+      width: fit-content;
+      max-width: 85%;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      animation: msgPop 0.25s ease forwards;
+    }
+    body.dark .chat-message {
+      background: #1e293b;
+      color: #f8fafc;
+      border-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(10px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .chat-input-row {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(15, 23, 42, 0.05);
+      display: flex;
+      gap: 10px;
+    }
+    body.dark .chat-input-row {
+      background: rgba(15, 23, 42, 0.6);
+      border-top-color: rgba(255, 255, 255, 0.05);
+    }
+    #msg {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      border-radius: 14px;
+      outline: none;
+      font-size: 0.9rem;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      color: var(--text);
+    }
+    body.dark #msg {
+      background: #0f172a;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .chat-send-btn {
+      border: none;
+      padding: 0 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: white;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+    }
+  </style>
 
 </head>
 
@@ -957,11 +1124,37 @@
 
     <footer>
       © 2026 AMAA • Powered by Amayuru
-      <div class="footer-note"></div>
     </footer>
   </main>
 
   <div id="toast" class="toast"></div>
+
+  <button class="chat-trigger-btn" id="chatTrigger">
+    <span class="pulse-badge"></span>
+    🔒 Private Chat
+  </button>
+
+  <section id="adchat">
+    <div class="chat-header">
+      <h2>🔒 Encrypted Ad Chat</h2>
+      <button class="chat-close-btn" id="chatClose">✕</button>
+    </div>
+
+    <div class="chat-auth-view" id="chatAuthView">
+      <h3>Enter Chat Secret Key</h3>
+      <p>This room is fully encrypted. Enter password to connect.</p>
+      <input type="password" id="chatSecretInput" placeholder="••••" />
+      <button onclick="verifyChatKey()">Unlock Chat</button>
+    </div>
+
+    <div class="chat-main-view" id="chatMainView">
+      <div id="chatBox"></div>
+      <div class="chat-input-row">
+        <input id="msg" placeholder="Type private message..." />
+        <button class="chat-send-btn" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </section>
 
   <script>
     const API_KEY = "W2uSxyPjiN6rfcFlJPRdV0x7wAXTXJsyDSBqyyok1nFdMboDtqBUexrQ";
@@ -980,6 +1173,19 @@
     const downloadCountEl = document.getElementById("downloadCount");
     const favoriteCountEl = document.getElementById("favoriteCount");
     const toastEl = document.getElementById("toast");
+
+    // Chat UI Elements
+    const chatTrigger = document.getElementById("chatTrigger");
+    const chatClose = document.getElementById("chatClose");
+    const adChatWindow = document.getElementById("adchat");
+
+    chatTrigger.addEventListener("click", () => {
+      adChatWindow.classList.add("open");
+    });
+
+    chatClose.addEventListener("click", () => {
+      adChatWindow.classList.remove("open");
+    });
 
     const STORAGE_KEYS = {
       theme: "amaa_theme",
@@ -1015,11 +1221,7 @@
     }
 
     function getFavorites() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEYS.favorites) || "[]");
-      } catch {
-        return [];
-      }
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.favorites) || "[]"); } catch { return []; }
     }
 
     function saveFavorites(list) {
@@ -1069,30 +1271,15 @@
     }
 
     function loadingState(text = "Loading...") {
-      grid.innerHTML = `
-        <div class="loading">
-          <strong>${escapeHtml(text)}</strong>
-          <div class="muted">Fetching live results from Pexels.</div>
-        </div>
-      `;
+      grid.innerHTML = `<div class="loading"><strong>${escapeHtml(text)}</strong><div class="muted">Fetching live results from Pexels.</div></div>`;
     }
 
     function emptyState(message) {
-      grid.innerHTML = `
-        <div class="empty">
-          <strong>No results found</strong>
-          <div class="muted">${escapeHtml(message)}</div>
-        </div>
-      `;
+      grid.innerHTML = `<div class="empty"><strong>No results found</strong><div class="muted">${escapeHtml(message)}</div></div>`;
     }
 
     function errorState(message) {
-      grid.innerHTML = `
-        <div class="error">
-          <strong>Something went wrong</strong>
-          <div class="muted">${escapeHtml(message)}</div>
-        </div>
-      `;
+      grid.innerHTML = `<div class="error"><strong>Something went wrong</strong><div class="muted">${escapeHtml(message)}</div></div>`;
     }
 
     function getPhotoUrl(photo) {
@@ -1101,413 +1288,208 @@
     }
 
     function getBestVideoFile(video) {
-      const files = [...(video.video_files || [])]
-        .filter(file => file.link)
-        .sort((a, b) => (a.width || 0) - (b.width || 0));
-
+      const files = [...(video.video_files || [])].filter(file => file.link).sort((a, b) => (a.width || 0) - (b.width || 0));
       if (!files.length) return null;
-
-      const findClosest = (targetWidth) => {
-        let best = files[0];
-        let bestDiff = Math.abs((best.width || 0) - targetWidth);
-        for (const file of files) {
-          const diff = Math.abs((file.width || 0) - targetWidth);
-          if (diff < bestDiff) {
-            best = file;
-            bestDiff = diff;
-          }
-        }
-        return best;
-      };
-
       if (videoQuality.value === "4k") return files[files.length - 1];
-      if (videoQuality.value === "2k") return findClosest(2560);
-      if (videoQuality.value === "1080") return findClosest(1920);
-      if (videoQuality.value === "720") return findClosest(1280);
       return files[files.length - 1];
     }
 
     function toggleFavorite(item, buttonEl) {
       const favorites = getFavorites();
       const index = favorites.findIndex(x => x.type === item.type && String(x.id) === String(item.id));
-
       let active = false;
-      if (index >= 0) {
-        favorites.splice(index, 1);
-        active = false;
-      } else {
-        favorites.unshift(item);
-        active = true;
-      }
-
-      saveFavorites(favorites);
-      updateStats();
-
-      if (buttonEl) {
-        buttonEl.classList.toggle("active", active);
-        buttonEl.innerHTML = active ? "♥ Saved" : "♡ Favorite";
-      }
-
+      if (index >= 0) { favorites.splice(index, 1); active = false; }
+      else { favorites.unshift(item); active = true; }
+      saveFavorites(favorites); updateStats();
+      if (buttonEl) { buttonEl.classList.toggle("active", active); buttonEl.innerHTML = active ? "♥ Saved" : "♡ Favorite"; }
       showToast(active ? "Added to favorites" : "Removed from favorites");
     }
 
     async function downloadFile(url, filename) {
       incrementDownloadCount();
-
       try {
         const response = await fetch(url, { mode: "cors" });
         if (!response.ok) throw new Error("bad response");
-
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
-
         const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = filename || "download";
-        a.rel = "noopener";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
+        a.href = blobUrl; a.download = filename || "download";
+        document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
         showToast("Download started");
-      } catch (error) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.download = filename || "download";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+      } catch {
+        const a = document.createElement("a"); a.href = url; a.target = "_blank";
+        document.body.appendChild(a); a.click(); a.remove();
         showToast("Opened file in a new tab");
       }
     }
 
     async function fetchWithCache(url) {
       if (state.cache.has(url)) return state.cache.get(url);
-
       if (state.controller) state.controller.abort();
       state.controller = new AbortController();
-
-      const res = await fetch(url, {
-        headers: { Authorization: API_KEY },
-        signal: state.controller.signal
-      });
-
-      if (!res.ok) throw new Error("Request failed");
-
-      const data = await res.json();
-      state.cache.set(url, data);
-      return data;
+      const res = await fetch(url, { headers: { Authorization: API_KEY }, signal: state.controller.signal });
+      const data = await res.json(); state.cache.set(url, data); return data;
     }
 
     function renderPhotos(photos) {
-      if (!photos.length) {
-        emptyState("Try another search term.");
-        return;
-      }
-
+      if (!photos.length) { emptyState("Try another search term."); return; }
       const favoriteSet = new Set(getFavorites().filter(x => x.type === "photo").map(x => String(x.id)));
-
       grid.innerHTML = photos.map(photo => {
-        const imgUrl = getPhotoUrl(photo);
-        const photographer = escapeHtml(photo.photographer || "Unknown creator");
-        const alt = escapeHtml(photo.alt || "Pexels photo");
+        const imgUrl = getPhotoUrl(photo); const photographer = escapeHtml(photo.photographer || "Unknown creator");
         const active = favoriteSet.has(String(photo.id));
-        const qualityLabel = escapeHtml(photoQuality.options[photoQuality.selectedIndex].text.replace("Photo Quality: ", ""));
-
         return `
           <article class="card">
             <div class="thumb">
-              <img src="${imgUrl}" alt="${alt}" loading="lazy">
+              <img src="${imgUrl}" loading="lazy">
               <div class="badge">Photo</div>
-              <div class="quality">${qualityLabel}</div>
-
               <div class="card-top">
-                <button class="heart-btn ${active ? "active" : ""}"
-                  data-action="favorite"
-                  data-type="photo"
-                  data-id="${photo.id}"
-                  data-title="${alt}"
-                  data-creator="${photographer}"
-                  data-url="${encodeURIComponent(imgUrl)}">
-                  ${active ? "♥ Saved" : "♡ Favorite"}
-                </button>
+                <button class="heart-btn ${active ? "active" : ""}" data-action="favorite" data-type="photo" data-id="${photo.id}" data-url="${encodeURIComponent(imgUrl)}">${active ? "♥ Saved" : "♡ Favorite"}</button>
               </div>
             </div>
-
-            <div class="content">
-              <h3>${photographer}</h3>
-              <p>${alt || "High quality stock photo."}</p>
-              <div class="card-actions">
-                <a class="btn btn-primary" href="${imgUrl}" target="_blank" rel="noopener">Open</a>
-                <button class="btn btn-secondary"
-                  data-action="download"
-                  data-url="${encodeURIComponent(imgUrl)}"
-                  data-filename="pexels-photo-${photo.id}.jpg">
-                  ⬇ Download
-                </button>
-              </div>
-            </div>
-          </article>
-        `;
+            <div class="content"><h3>${photographer}</h3><div class="card-actions">
+              <a class="btn btn-primary" href="${imgUrl}" target="_blank">Open</a>
+              <button class="btn btn-secondary" data-action="download" data-url="${encodeURIComponent(imgUrl)}">⬇ Download</button>
+            </div></div>
+          </article>`;
       }).join("");
     }
 
     function renderVideos(videos) {
-      if (!videos.length) {
-        emptyState("Try another search term.");
-        return;
-      }
-
+      if (!videos.length) { emptyState("Try another search term."); return; }
       const favoriteSet = new Set(getFavorites().filter(x => x.type === "video").map(x => String(x.id)));
-
       grid.innerHTML = videos.map(video => {
-        const file = getBestVideoFile(video);
-        const source = file ? file.link : "";
+        const file = getBestVideoFile(video); const source = file ? file.link : "";
         const photographer = escapeHtml(video.user?.name || "Unknown creator");
-        const qualityLabel = file ? `${file.width || "?"}px` : "Best";
         const active = favoriteSet.has(String(video.id));
-
         return `
           <article class="card">
             <div class="thumb">
-              <video controls preload="metadata" poster="${video.image || ""}">
-                <source src="${source}" type="video/mp4">
-              </video>
+              <video controls poster="${video.image || ""}"><source src="${source}" type="video/mp4"></video>
               <div class="badge">Video</div>
-              <div class="quality">${escapeHtml(qualityLabel)}</div>
-
               <div class="card-top">
-                <button class="heart-btn ${active ? "active" : ""}"
-                  data-action="favorite"
-                  data-type="video"
-                  data-id="${video.id}"
-                  data-title="${escapeHtml(video.url || "Pexels video")}"
-                  data-creator="${photographer}"
-                  data-url="${encodeURIComponent(source)}">
-                  ${active ? "♥ Saved" : "♡ Favorite"}
-                </button>
+                <button class="heart-btn ${active ? "active" : ""}" data-action="favorite" data-type="video" data-id="${video.id}" data-url="${encodeURIComponent(source)}">${active ? "♥ Saved" : "♡ Favorite"}</button>
               </div>
             </div>
-
-            <div class="content">
-              <h3>${photographer}</h3>
-              <p>Live preview available. Download the selected quality.</p>
-              <div class="card-actions">
-                <a class="btn btn-primary" href="${source}" target="_blank" rel="noopener">Open</a>
-                <button class="btn btn-secondary"
-                  data-action="download"
-                  data-url="${encodeURIComponent(source)}"
-                  data-filename="pexels-video-${video.id}.mp4">
-                  ⬇ Download
-                </button>
-              </div>
-            </div>
-          </article>
-        `;
+            <div class="content"><h3>${photographer}</h3><div class="card-actions">
+              <a class="btn btn-primary" href="${source}" target="_blank">Open</a>
+              <button class="btn btn-secondary" data-action="download" data-url="${encodeURIComponent(source)}">⬇ Download</button>
+            </div></div>
+          </article>`;
       }).join("");
     }
 
     async function loadContent() {
-      const query = (searchInput.value || state.query || "nature").trim();
-      state.query = query;
-
-      loadingState(state.mode === "photos" ? "Loading Photos..." : "Loading Videos...");
-
+      const query = (searchInput.value || state.query || "nature").trim(); state.query = query;
+      loadingState();
       try {
-        const endpoint = state.mode === "photos"
-          ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12`
-          : `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=12`;
-
+        const endpoint = state.mode === "photos" ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12` : `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=12`;
         const data = await fetchWithCache(endpoint);
-
-        if (state.mode === "photos") renderPhotos(data.photos || []);
-        else renderVideos(data.videos || []);
-      } catch (err) {
-        if (err.name === "AbortError") return;
-        errorState("Check your API key, internet connection, or Pexels limits.");
-      }
-    }
-
-    function debounceLoad() {
-      clearTimeout(state.debounceTimer);
-      state.debounceTimer = setTimeout(loadContent, 250);
-    }
-
-    function clearCacheAndReload() {
-      state.cache.clear();
-      loadContent();
+        if (state.mode === "photos") renderPhotos(data.photos || []); else renderVideos(data.videos || []);
+      } catch { errorState("Error loading content."); }
     }
 
     grid.addEventListener("click", async (e) => {
       const favBtn = e.target.closest('[data-action="favorite"]');
-      if (favBtn) {
-        const type = favBtn.dataset.type;
-        const id = favBtn.dataset.id;
-        const title = favBtn.dataset.title || "";
-        const creator = favBtn.dataset.creator || "";
-        const url = decodeURIComponent(favBtn.dataset.url || "");
-
-        toggleFavorite({ type, id, title, creator, url }, favBtn);
-        return;
-      }
-
-      const downloadBtn = e.target.closest('[data-action="download"]');
-      if (downloadBtn) {
-        const url = decodeURIComponent(downloadBtn.dataset.url || "");
-        const filename = downloadBtn.dataset.filename || "download";
-        if (url) await downloadFile(url, filename);
-      }
+      if (favBtn) { toggleFavorite({ type: favBtn.dataset.type, id: favBtn.dataset.id, url: decodeURIComponent(favBtn.dataset.url) }, favBtn); return; }
+      const dlBtn = e.target.closest('[data-action="download"]');
+      if (dlBtn) await downloadFile(decodeURIComponent(dlBtn.dataset.url));
     });
 
-    photosTab.addEventListener("click", () => {
-      setMode("photos");
-      loadContent();
-    });
-
-    videosTab.addEventListener("click", () => {
-      setMode("videos");
-      loadContent();
-    });
-
-    refreshBtn.addEventListener("click", async () => {
-      refreshBtn.disabled = true;
-      refreshBtn.innerHTML = "⏳ Refreshing...";
-      clearCacheAndReload();
-      setTimeout(() => {
-        refreshBtn.disabled = false;
-        refreshBtn.innerHTML = "↻ Refresh";
-      }, 500);
-    });
-
-    topicButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        topicButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        state.query = btn.dataset.topic;
-        searchInput.value = state.query;
-        loadContent();
-      });
-    });
-
-    searchInput.addEventListener("input", debounceLoad);
-    searchInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") loadContent();
-    });
-
-    photoQuality.addEventListener("change", () => {
-      if (state.mode === "photos") loadContent();
-    });
-
-    videoQuality.addEventListener("change", () => {
-      if (state.mode === "videos") loadContent();
-    });
-
-    themeBtn.addEventListener("click", () => {
-      const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
-      applyTheme(nextTheme);
-    });
+    photosTab.addEventListener("click", () => { setMode("photos"); loadContent(); });
+    videosTab.addEventListener("click", () => { setMode("videos"); loadContent(); });
+    searchInput.addEventListener("input", () => { clearTimeout(state.debounceTimer); state.debounceTimer = setTimeout(loadContent, 250); });
+    themeBtn.addEventListener("click", () => applyTheme(document.body.classList.contains("dark") ? "light" : "dark"));
 
     (function init(){
-      incrementVisitorCount();
-      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || "dark";
-      applyTheme(savedTheme);
-      updateStats();
-      setMode("photos");
-      loadContent();
+      incrementVisitorCount(); applyTheme(localStorage.getItem(STORAGE_KEYS.theme) || "dark");
+      updateStats(); setMode("photos"); loadContent();
     })();
   </script>
 
-<!-- AD CHAT SECTION -->
-<section id="adchat" class="container">
-  <h2>💬 AD CHAT</h2>
-
-  <div id="chatBox"></div>
-
-  <div class="chat-input-row">
-    <input id="msg" placeholder="Type message..." />
-    <button onclick="sendMsg()">Send</button>
-  </div>
-</section>
-
-
-
   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDw1-bG-14VgqVUBvBoeUHJlpKTgAgvKzU",
+      authDomain: "ad-chat-8241d.firebaseapp.com",
+      projectId: "ad-chat-8241d",
+      storageBucket: "ad-chat-8241d.firebasestorage.app",
+      messagingSenderId: "891838901312",
+      appId: "1:891838901312:web:32d1961b65a4b4518243a5",
+      measurementId: "G-4H94Y6WY65"
+    };
 
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDw1-bG-14VgqVUBvBoeUHJlpKTgAgvKzU",
-  authDomain: "ad-chat-8241d.firebaseapp.com",
-  projectId: "ad-chat-8241d",
-  storageBucket: "ad-chat-8241d.firebasestorage.app",
-  messagingSenderId: "891838901312",
-  appId: "1:891838901312:web:32d1961b65a4b4518243a5",
-  measurementId: "G-4H94Y6WY65"
-};
+    const chatAuthView = document.getElementById("chatAuthView");
+    const chatMainView = document.getElementById("chatMainView");
+    const chatBox = document.getElementById("chatBox");
+    const msgInput = document.getElementById("msg");
+    const sendBtn = document.getElementById("sendBtn");
+    const secretInput = document.getElementById("chatSecretInput");
 
-// Init Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    let currentChatRoomKey = "";
 
-// Elements
-const chatBox = document.getElementById("chatBox");
-const msgInput = document.getElementById("msg");
+    // Trigger unlock on enter key
+    secretInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") window.verifyChatKey();
+    });
 
-// Send Message
-window.sendMsg = async function () {
+    // Verification Logic
+    window.verifyChatKey = function() {
+      const userKey = secretInput.value.trim();
+      
+      // ⚠️ මෙතන තියෙන "1234" වෙනුවට ඔයාට ඕනෙම රහස් අංකයක් දාන්න පුළුවන්
+      if (userKey === "1234") { 
+        currentChatRoomKey = userKey;
+        chatAuthView.style.display = "none";
+        chatMainView.style.display = "flex";
+        startPrivateChatStream();
+      } else {
+        alert("Invalid Secret Key! Access Denied.");
+        secretInput.value = "";
+      }
+    };
 
-  const text = msgInput.value;
+    // Send Private Message
+    async function sendPrivateMsg() {
+      const text = msgInput.value.trim();
+      if (text === "" || !currentChatRoomKey) return;
 
-  if(text.trim() === "") return;
+      await addDoc(collection(db, "messages"), {
+        text: text,
+        time: Date.now(),
+        room: currentChatRoomKey // Room identifier tag
+      });
 
-  await addDoc(collection(db, "messages"), {
-    text: text,
-    time: Date.now()
-  });
+      msgInput.value = "";
+    }
 
-  msgInput.value = "";
-};
+    sendBtn.addEventListener("click", sendPrivateMsg);
+    msgInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendPrivateMsg();
+    });
 
-// Receive Messages Realtime
-const q = query(
-  collection(db, "messages"),
-  orderBy("time")
-);
+    // Listen only to Messages inside the unlocked room
+    function startPrivateChatStream() {
+      const q = query(
+        collection(db, "messages"),
+        where("room", "==", currentChatRoomKey),
+        orderBy("time")
+      );
 
-onSnapshot(q, (snapshot) => {
-
-  chatBox.innerHTML = "";
-
-  snapshot.forEach((doc) => {
-
-    const data = doc.data();
-
-    chatBox.innerHTML += `
-      <div class="chat-message">
-        ${data.text}
-      </div>
-    `;
-  });
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-});
-
-</script>
-
+      onSnapshot(q, (snapshot) => {
+        chatBox.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          chatBox.innerHTML += `<div class="chat-message">${escapeHtml(data.text)}</div>`;
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    }
+  </script>
 </body>
 </html>
