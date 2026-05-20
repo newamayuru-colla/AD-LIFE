@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WhatsApp Pro Clone</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>💬 Chats</h2>
+
+    <input id="nameInput" placeholder="Enter your name"/>
+    <button onclick="loginUser()">Start Chat</button>
+
+    <div id="userList"></div>
+  </div>
+
+  <!-- CHAT BOX -->
+  <div class="chat">
+
+    <div id="header">Select a user</div>
+
+    <div id="messages"></div>
+
+    <div class="inputBox">
+      <input id="msgInput" placeholder="Type message..."/>
+      <button onclick="sendMsg()">Send</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
