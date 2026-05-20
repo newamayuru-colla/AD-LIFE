@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMAA — Premium Media Downloader</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #eef5ff;
+      --card: rgba(255,255,255,.80);
+      --card2: rgba(255,255,255,.92);
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary2: #38bdf8;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --shadow: 0 18px 45px rgba(15, 23, 42, .10);
+      --shadow2: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { margin:0; padding:0; }
+    body{
+      font-family:'Poppins', sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, #dff1ff 0%, transparent 28%),
+        radial-gradient(circle at top right, #dff8ff 0%, transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+    }
+
+    .container{
+      width:min(1200px, calc(100% - 24px));
+      margin:0 auto;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(18px);
+      background: rgba(255,255,255,.72);
+      border-bottom: 1px solid rgba(255,255,255,.6);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:16px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .logo{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      box-shadow: 0 10px 25px rgba(37,99,235,.28);
+      flex:0 0 auto;
+      position:relative;
+    }
+
+    .logo::after{
+      content:'★';
+      position:absolute;
+      right:-6px;
+      top:-6px;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      color:#2563eb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.75rem;
+      font-weight:800;
+      box-shadow:0 8px 20px rgba(0,0,0,.12);
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:1.25rem;
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .brand p{
+      margin:2px 0 0;
+      font-size:.88rem;
+      color:var(--muted);
+    }
+
+    .hero{
+      padding:28px 0 18px;
+    }
+
+    .hero-card{
+      background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.66));
+      border:1px solid rgba(255,255,255,.68);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      overflow:hidden;
+      position:relative;
+      animation: floatIn .7s ease;
+    }
+
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:auto -50px -70px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(56,189,248,.28) 0%, rgba(56,189,248,.08) 40%, transparent 70%);
+      pointer-events:none;
+    }
+
+    @keyframes floatIn{
+      from{ opacity:0; transform: translateY(20px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    .hero-top{
+      display:grid;
+      grid-template-columns: 1.45fr .95fr;
+      gap:20px;
+      align-items:center;
+    }
+
+    .hero h2{
+      margin:0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      line-height:1.02;
+      letter-spacing:-.02em;
+    }
+
+    .hero h2 span{
+      background: linear-gradient(90deg, var(--primary), var(--primary2));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero .desc{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      max-width:58ch;
+    }
+
+    .speed-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .speed-chips span{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.82);
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow: var(--shadow2);
+      font-size:.84rem;
+      font-weight:700;
+      color: var(--text);
+    }
+
+    .hero-meta{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .meta-box{
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow2);
+    }
+
+    .meta-box strong{
+      display:block;
+      font-size:1.05rem;
+      margin-bottom:4px;
+    }
+
+    .meta-box span{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:14px;
+      align-items:center;
+      margin-top:18px;
+    }
+
+    .search{
+      position:relative;
+      width:100%;
+    }
+
+    .search input{
+      width:100%;
+      border:none;
+      outline:none;
+      padding:18px 18px 18px 54px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow2);
+      font-size:1rem;
+      color:var(--text);
+      border:1px solid rgba(37,99,235,.08);
+    }
+
+    .search input:focus{
+      border:1px solid rgba(37,99,235,.35);
+      box-shadow:0 10px 35px rgba(37,99,235,.12);
+    }
+
+    .search .icon{
+      position:absolute;
+      left:18px;
+      top:50%;
+      transform:translateY(-50%);
+      opacity:.55;
+      font-size:1.05rem;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .pill, .tab, .btn, .heart-btn{
+      position:relative;
+      overflow:hidden;
+      transition:
+        transform .18s ease,
+        box-shadow .25s ease,
+        filter .25s ease,
+        background .18s ease,
+        color .18s ease;
+    }
+
+    .pill{
+      border:none;
+      cursor:pointer;
+      padding:13px 18px;
+      border-radius:999px;
+      font-weight:700;
+      background: rgba(255,255,255,.86);
+      color:var(--text);
+      box-shadow: var(--shadow2);
+      border:1px solid rgba(15,23,42,.05);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .pill.active{
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color:white;
+    }
+
+    .tab{
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      cursor:pointer;
+      background: rgba(255,255,255,.86);
+      color:var(--text);
+      font-weight:700;
+      box-shadow: var(--shadow2);
+    }
+
+    .tab.active{
+      background: linear-gradient(135deg, #10b981, #22c55e);
+      color:#fff;
+    }
+
+    .btn:hover,
+    .tab:hover,
+    .pill:hover,
+    .heart-btn:hover{
+      transform:translateY(-3px) scale(1.02);
+      filter:brightness(1.05);
+    }
+
+    .btn:active,
+    .tab:active,
+    .pill:active,
+    .heart-btn:active{
+      transform:scale(.96);
+    }
+
+    .btn::after,
+    .tab::after,
+    .pill::after,
+    .heart-btn::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.22) 50%, transparent 80%);
+      transform:translateX(-120%);
+      transition:transform .7s ease;
+      pointer-events:none;
+    }
+
+    .btn:hover::after,
+    .tab:hover::after,
+    .pill:hover::after,
+    .heart-btn:hover::after{
+      transform:translateX(120%);
+    }
+
+    .bar{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin:18px 0 14px;
+      align-items:start;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .quality-panel{
+      margin-top:14px;
+      padding:16px;
+      border-radius:22px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow2);
+    }
+
+    .quality-title{
+      font-size:.86rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color: var(--muted);
+      margin-bottom:10px;
+    }
+
+    .select-wrap{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+    }
+
+    select{
+      border:none;
+      outline:none;
+      padding:12px 14px;
+      border-radius:14px;
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow2);
+      color:var(--text);
+      font-weight:600;
+      border:1px solid rgba(15,23,42,.05);
+      min-width: 180px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:18px;
+      padding: 12px 0 30px;
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid rgba(255,255,255,.68);
+      border-radius: 26px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      transition: transform .25s ease, box-shadow .25s ease;
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+
+    .card:hover{
+      transform: translateY(-8px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, .13);
+    }
+
+    .card::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      padding:1px;
+      background:linear-gradient(135deg, rgba(37,99,235,.2), rgba(56,189,248,.05));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;
+              mask-composite:exclude;
+      pointer-events:none;
+    }
+
+    .thumb{
+      position:relative;
+      aspect-ratio: 4 / 5;
+      overflow:hidden;
+      background:#dbeafe;
+    }
+
+    .thumb img, .thumb video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .thumb::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(15,23,42,.25), transparent 45%);
+      pointer-events:none;
+    }
+
+    .badge{
+      position:absolute;
+      left:14px;
+      top:14px;
+      background: rgba(15,23,42,.74);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:700;
+      backdrop-filter: blur(8px);
+      z-index:2;
+    }
+
+    .quality{
+      position:absolute;
+      right:14px;
+      top:14px;
+      background: rgba(255,255,255,.92);
+      color:#0f172a;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:800;
+      box-shadow: var(--shadow2);
+      z-index:2;
+    }
+
+    .card-top{
+      position:absolute;
+      inset:14px 14px auto 14px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .heart-btn{
+      pointer-events:auto;
+      border:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.92);
+      color:#0f172a;
+      font-weight:800;
+      box-shadow: 0 10px 24px rgba(15,23,42,.12);
+      border:1px solid rgba(15,23,42,.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .heart-btn.active{
+      background: linear-gradient(135deg, rgba(236,72,153,.95), rgba(244,63,94,.95));
+      color:#fff;
+      transform: scale(1.02);
+    }
+
+    .content{
+      padding:16px;
+    }
+
+    .content h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      line-height:1.35;
+    }
+
+    .content p{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:.9rem;
+      min-height: 42px;
+    }
+
+    .card-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .btn{
+      border:none;
+      text-decoration:none;
+      cursor:pointer;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-width:0;
+      width:100%;
+    }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color:#fff;
+      box-shadow: 0 12px 22px rgba(37,99,235,.22);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .btn-primary::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-120%;
+      width:100%;
+      height:100%;
+      background:rgba(255,255,255,.2);
+      transform:skewX(-20deg);
+      transition:.5s;
+    }
+
+    .btn-primary:hover::before{
+      left:120%;
+    }
+
+    .btn-secondary{
+      background: rgba(255,255,255,.92);
+      color:var(--text);
+      border:1px solid rgba(15,23,42,.07);
+    }
+
+    .loading, .empty, .error{
+      grid-column:1 / -1;
+      text-align:center;
+      padding:48px 20px;
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius: 26px;
+      box-shadow: var(--shadow2);
+    }
+
+    .loading strong, .empty strong, .error strong{
+      display:block;
+      font-size:1.1rem;
+      margin-bottom:8px;
+    }
+
+    .muted{ color:var(--muted); }
+
+    .premium-stats{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:14px;
+    }
+
+    .stat-card{
+      padding:18px;
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      box-shadow:var(--shadow2);
+      text-align:center;
+    }
+
+    .stat-card strong{
+      display:block;
+      font-size:1.5rem;
+      margin-bottom:6px;
+    }
+
+    .stat-card span{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .live-dot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#22c55e;
+      margin-right:8px;
+      box-shadow:0 0 14px #22c55e;
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(1.35);opacity:.65;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    footer{
+      padding: 0 0 28px;
+      color:var(--muted);
+      text-align:center;
+      font-size:.93rem;
+      opacity:.9;
+    }
+
+    .footer-note{
+      margin-top:10px;
+      font-size:.85rem;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      background:rgba(15,23,42,.92);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:999px;
+      box-shadow:0 16px 40px rgba(0,0,0,.24);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease;
+      z-index:100;
+      max-width:calc(100% - 24px);
+      text-align:center;
+      font-size:.92rem;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    body.dark{
+      --bg: #060816;
+      --card: rgba(15,23,42,.78);
+      --card2: rgba(15,23,42,.92);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --shadow2: 0 12px 35px rgba(0,0,0,.32);
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.18) 0%, transparent 25%),
+        radial-gradient(circle at top right, rgba(56,189,248,.12) 0%, transparent 20%),
+        linear-gradient(180deg, #050816 0%, #0f172a 100%);
+    }
+
+    body.dark header{
+      background: rgba(2,6,23,.72);
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+
+    body.dark .hero-card,
+    body.dark .meta-box,
+    body.dark .pill,
+    body.dark .search input,
+    body.dark select,
+    body.dark .tab,
+    body.dark .loading,
+    body.dark .error,
+    body.dark .empty{
+      background: rgba(15,23,42,.72);
+      border-color: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+
+    body.dark .heart-btn,
+    body.dark .btn-secondary{
+      background: rgba(15,23,42,.95);
+      border-color: rgba(255,255,255,.08);
+      color: var(--text);
+    }
+
+    body.dark .speed-chips span{
+      background: rgba(15,23,42,.88);
+      color: var(--text);
+      border-color: rgba(255,255,255,.06);
+    }
+
+    body.dark footer,
+    body.dark .brand p{
+      color: var(--muted);
+    }
+
+    body.dark .stat-card{
+      background:rgba(15,23,42,.68);
+      border-color:rgba(255,255,255,.06);
+    }
+
+    body.dark .card::before{
+      background: linear-gradient(135deg, rgba(59,130,246,.28), rgba(255,255,255,.03));
+    }
+
+    body.dark .quality-panel{
+      background: rgba(15,23,42,.62);
+      border-color: rgba(255,255,255,.06);
+    }
+
+    @media (max-width: 980px){
+      .hero-top, .controls{ grid-template-columns:1fr; }
+      .actions{ justify-content:flex-start; }
+      .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px){
+      .container{ width:min(100% - 16px, 1200px); }
+      .nav{ padding:12px 0; }
+      .logo{ width:48px; height:48px; border-radius:16px; }
+      .brand h1{ font-size:1.06rem; }
+      .hero-card{ padding:16px; border-radius: 24px; }
+      .grid{ grid-template-columns: 1fr; }
+      .meta-box{ padding: 14px; }
+      select{ min-width: 100%; }
+    }
+  </style>
+
+<style>
+/* AD CHAT */
+#adchat{
+  margin-top:40px;
+  padding:25px;
+  background:linear-gradient(135deg,#0f9b8e,#1e90ff);
+  border-radius:24px;
+  box-shadow:0 15px 40px rgba(0,0,0,.12);
+  color:#fff;
+}
+
+#adchat h2{
+  margin-top:0;
+  font-size:2rem;
+}
+
+#chatBox{
+  height:320px;
+  overflow-y:auto;
+  background:rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:15px;
+  backdrop-filter:blur(10px);
+}
+
+.chat-message{
+  background:#dcf8c6;
+  color:#111;
+  padding:10px 14px;
+  margin:10px 0;
+  border-radius:14px;
+  width:fit-content;
+  max-width:80%;
+}
+
+.chat-input-row{
+  display:flex;
+  gap:10px;
+}
+
+#msg{
+  flex:1;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  outline:none;
+  font-size:1rem;
+}
+
+#adchat button{
+  border:none;
+  padding:14px 22px;
+  border-radius:14px;
+  background:#fff;
+  color:#1e90ff;
+  font-weight:700;
+  cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <h1>AMAA 👑</h1>
+          <p>Ultra-fast premium photo & video downloader</p>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="pill" id="themeBtn">🌙 Dark</button>
+        <button class="pill" id="refreshBtn">↻ Refresh</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div>
+            <h2><span>Premium</span> wallpapers, photos, and videos in one clean site.</h2>
+            <p class="desc">
+              Search live content fast, switch between photos and videos, choose quality below, preview instantly, and download with one click.
+            </p>
+
+            <div class="speed-chips">
+              <span>⚡ Fast Search</span>
+              <span>⬇ One-click Download</span>
+              <span>🎯 Quality Select</span>
+              <span>💎 Premium UI</span>
+            </div>
+          </div>
+
+          <div class="hero-meta">
+            <div class="meta-box">
+              <strong>Fast Search</strong>
+              <span>Search any keyword and load results instantly.</span>
+            </div>
+            <div class="meta-box">
+              <strong>One-Click Download</strong>
+              <span>Uses the selected quality for files.</span>
+            </div>
+            <div class="meta-box">
+              <strong>4K Quality</strong>
+              <span>Supports HD, 2K and Ultra HD content.</span>
+            </div>
+            <div class="meta-box">
+              <strong>Modern UI</strong>
+              <span>Glassmorphism premium responsive design.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <label class="search">
+            <span class="icon">⌕</span>
+            <input id="searchInput" type="text" placeholder="Search: nature, city, wallpaper, car, travel..." />
+          </label>
+
+          <div class="actions">
+            <button class="pill active" data-topic="nature">Nature</button>
+            <button class="pill" data-topic="wallpaper">Wallpaper</button>
+            <button class="pill" data-topic="travel">Travel</button>
+            <button class="pill" data-topic="city">City</button>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="tabs">
+            <button class="tab active" id="photosTab">📸 Photos</button>
+            <button class="tab" id="videosTab">🎬 Videos</button>
+          </div>
+
+          <div class="quality-panel">
+            <div class="quality-title">Quality</div>
+            <div class="select-wrap">
+              <select id="photoQuality">
+                <option value="large2x">Photo Quality: Large 2X</option>
+                <option value="original">Photo Quality: Original</option>
+                <option value="large">Photo Quality: Large</option>
+                <option value="medium">Photo Quality: Medium</option>
+              </select>
+
+              <select id="videoQuality" style="display:none;">
+                <option value="auto">Video Quality: Auto Best</option>
+                <option value="4k">Video Quality: 4K / Highest</option>
+                <option value="2k">Video Quality: 2K</option>
+                <option value="1080">Video Quality: 1080p</option>
+                <option value="720">Video Quality: 720p</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="grid">
+      <div class="loading">
+        <strong>Loading content...</strong>
+        <div class="muted">Please wait a moment.</div>
+      </div>
+    </section>
+
+    <section class="premium-stats">
+      <div class="stat-card">
+        <strong><span class="live-dot"></span><span id="visitorCount">0</span></strong>
+        <span>Premium Visitors</span>
+      </div>
+
+      <div class="stat-card">
+        <strong id="downloadCount">0</strong>
+        <span>Total Downloads</span>
+      </div>
+
+      <div class="stat-card">
+        <strong id="favoriteCount">0</strong>
+        <span>Total Favorites</span>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 AMAA • Powered by Amayuru
+      <div class="footer-note"></div>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const API_KEY = "W2uSxyPjiN6rfcFlJPRdV0x7wAXTXJsyDSBqyyok1nFdMboDtqBUexrQ";
+
+    const grid = document.getElementById("grid");
+    const searchInput = document.getElementById("searchInput");
+    const photoQuality = document.getElementById("photoQuality");
+    const videoQuality = document.getElementById("videoQuality");
+    const photosTab = document.getElementById("photosTab");
+    const videosTab = document.getElementById("videosTab");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const themeBtn = document.getElementById("themeBtn");
+    const topicButtons = [...document.querySelectorAll("[data-topic]")];
+
+    const visitorCountEl = document.getElementById("visitorCount");
+    const downloadCountEl = document.getElementById("downloadCount");
+    const favoriteCountEl = document.getElementById("favoriteCount");
+    const toastEl = document.getElementById("toast");
+
+    const STORAGE_KEYS = {
+      theme: "amaa_theme",
+      favorites: "amaa_favorites",
+      downloads: "amaa_downloads",
+      visitors: "amaa_visitors",
+      sessionSeen: "amaa_session_seen"
+    };
+
+    const state = {
+      mode: "photos",
+      query: "nature",
+      cache: new Map(),
+      controller: null,
+      debounceTimer: null
+    };
+
+    function escapeHtml(str = "") {
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      }[m]));
+    }
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toastEl.classList.remove("show"), 2200);
+    }
+
+    function getFavorites() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.favorites) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveFavorites(list) {
+      localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(list));
+    }
+
+    function isFavorite(type, id) {
+      return getFavorites().some(item => item.type === type && String(item.id) === String(id));
+    }
+
+    function updateStats() {
+      const visitors = Number(localStorage.getItem(STORAGE_KEYS.visitors) || 0);
+      const downloads = Number(localStorage.getItem(STORAGE_KEYS.downloads) || 0);
+      const favorites = getFavorites().length;
+
+      visitorCountEl.textContent = visitors.toLocaleString();
+      downloadCountEl.textContent = downloads.toLocaleString();
+      favoriteCountEl.textContent = favorites.toLocaleString();
+    }
+
+    function incrementVisitorCount() {
+      if (!sessionStorage.getItem(STORAGE_KEYS.sessionSeen)) {
+        sessionStorage.setItem(STORAGE_KEYS.sessionSeen, "1");
+        const current = Number(localStorage.getItem(STORAGE_KEYS.visitors) || 0);
+        localStorage.setItem(STORAGE_KEYS.visitors, String(current + 1));
+      }
+    }
+
+    function incrementDownloadCount() {
+      const current = Number(localStorage.getItem(STORAGE_KEYS.downloads) || 0);
+      localStorage.setItem(STORAGE_KEYS.downloads, String(current + 1));
+      updateStats();
+    }
+
+    function applyTheme(theme) {
+      document.body.classList.toggle("dark", theme === "dark");
+      themeBtn.innerHTML = theme === "dark" ? "☀ Light" : "🌙 Dark";
+      localStorage.setItem(STORAGE_KEYS.theme, theme);
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      photosTab.classList.toggle("active", mode === "photos");
+      videosTab.classList.toggle("active", mode === "videos");
+      photoQuality.style.display = mode === "photos" ? "block" : "none";
+      videoQuality.style.display = mode === "videos" ? "block" : "none";
+    }
+
+    function loadingState(text = "Loading...") {
+      grid.innerHTML = `
+        <div class="loading">
+          <strong>${escapeHtml(text)}</strong>
+          <div class="muted">Fetching live results from Pexels.</div>
+        </div>
+      `;
+    }
+
+    function emptyState(message) {
+      grid.innerHTML = `
+        <div class="empty">
+          <strong>No results found</strong>
+          <div class="muted">${escapeHtml(message)}</div>
+        </div>
+      `;
+    }
+
+    function errorState(message) {
+      grid.innerHTML = `
+        <div class="error">
+          <strong>Something went wrong</strong>
+          <div class="muted">${escapeHtml(message)}</div>
+        </div>
+      `;
+    }
+
+    function getPhotoUrl(photo) {
+      if (photoQuality.value === "original") return photo.src.original;
+      return photo.src[photoQuality.value] || photo.src.large2x || photo.src.large;
+    }
+
+    function getBestVideoFile(video) {
+      const files = [...(video.video_files || [])]
+        .filter(file => file.link)
+        .sort((a, b) => (a.width || 0) - (b.width || 0));
+
+      if (!files.length) return null;
+
+      const findClosest = (targetWidth) => {
+        let best = files[0];
+        let bestDiff = Math.abs((best.width || 0) - targetWidth);
+        for (const file of files) {
+          const diff = Math.abs((file.width || 0) - targetWidth);
+          if (diff < bestDiff) {
+            best = file;
+            bestDiff = diff;
+          }
+        }
+        return best;
+      };
+
+      if (videoQuality.value === "4k") return files[files.length - 1];
+      if (videoQuality.value === "2k") return findClosest(2560);
+      if (videoQuality.value === "1080") return findClosest(1920);
+      if (videoQuality.value === "720") return findClosest(1280);
+      return files[files.length - 1];
+    }
+
+    function toggleFavorite(item, buttonEl) {
+      const favorites = getFavorites();
+      const index = favorites.findIndex(x => x.type === item.type && String(x.id) === String(item.id));
+
+      let active = false;
+      if (index >= 0) {
+        favorites.splice(index, 1);
+        active = false;
+      } else {
+        favorites.unshift(item);
+        active = true;
+      }
+
+      saveFavorites(favorites);
+      updateStats();
+
+      if (buttonEl) {
+        buttonEl.classList.toggle("active", active);
+        buttonEl.innerHTML = active ? "♥ Saved" : "♡ Favorite";
+      }
+
+      showToast(active ? "Added to favorites" : "Removed from favorites");
+    }
+
+    async function downloadFile(url, filename) {
+      incrementDownloadCount();
+
+      try {
+        const response = await fetch(url, { mode: "cors" });
+        if (!response.ok) throw new Error("bad response");
+
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = filename || "download";
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+        showToast("Download started");
+      } catch (error) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.download = filename || "download";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showToast("Opened file in a new tab");
+      }
+    }
+
+    async function fetchWithCache(url) {
+      if (state.cache.has(url)) return state.cache.get(url);
+
+      if (state.controller) state.controller.abort();
+      state.controller = new AbortController();
+
+      const res = await fetch(url, {
+        headers: { Authorization: API_KEY },
+        signal: state.controller.signal
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      const data = await res.json();
+      state.cache.set(url, data);
+      return data;
+    }
+
+    function renderPhotos(photos) {
+      if (!photos.length) {
+        emptyState("Try another search term.");
+        return;
+      }
+
+      const favoriteSet = new Set(getFavorites().filter(x => x.type === "photo").map(x => String(x.id)));
+
+      grid.innerHTML = photos.map(photo => {
+        const imgUrl = getPhotoUrl(photo);
+        const photographer = escapeHtml(photo.photographer || "Unknown creator");
+        const alt = escapeHtml(photo.alt || "Pexels photo");
+        const active = favoriteSet.has(String(photo.id));
+        const qualityLabel = escapeHtml(photoQuality.options[photoQuality.selectedIndex].text.replace("Photo Quality: ", ""));
+
+        return `
+          <article class="card">
+            <div class="thumb">
+              <img src="${imgUrl}" alt="${alt}" loading="lazy">
+              <div class="badge">Photo</div>
+              <div class="quality">${qualityLabel}</div>
+
+              <div class="card-top">
+                <button class="heart-btn ${active ? "active" : ""}"
+                  data-action="favorite"
+                  data-type="photo"
+                  data-id="${photo.id}"
+                  data-title="${alt}"
+                  data-creator="${photographer}"
+                  data-url="${encodeURIComponent(imgUrl)}">
+                  ${active ? "♥ Saved" : "♡ Favorite"}
+                </button>
+              </div>
+            </div>
+
+            <div class="content">
+              <h3>${photographer}</h3>
+              <p>${alt || "High quality stock photo."}</p>
+              <div class="card-actions">
+                <a class="btn btn-primary" href="${imgUrl}" target="_blank" rel="noopener">Open</a>
+                <button class="btn btn-secondary"
+                  data-action="download"
+                  data-url="${encodeURIComponent(imgUrl)}"
+                  data-filename="pexels-photo-${photo.id}.jpg">
+                  ⬇ Download
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderVideos(videos) {
+      if (!videos.length) {
+        emptyState("Try another search term.");
+        return;
+      }
+
+      const favoriteSet = new Set(getFavorites().filter(x => x.type === "video").map(x => String(x.id)));
+
+      grid.innerHTML = videos.map(video => {
+        const file = getBestVideoFile(video);
+        const source = file ? file.link : "";
+        const photographer = escapeHtml(video.user?.name || "Unknown creator");
+        const qualityLabel = file ? `${file.width || "?"}px` : "Best";
+        const active = favoriteSet.has(String(video.id));
+
+        return `
+          <article class="card">
+            <div class="thumb">
+              <video controls preload="metadata" poster="${video.image || ""}">
+                <source src="${source}" type="video/mp4">
+              </video>
+              <div class="badge">Video</div>
+              <div class="quality">${escapeHtml(qualityLabel)}</div>
+
+              <div class="card-top">
+                <button class="heart-btn ${active ? "active" : ""}"
+                  data-action="favorite"
+                  data-type="video"
+                  data-id="${video.id}"
+                  data-title="${escapeHtml(video.url || "Pexels video")}"
+                  data-creator="${photographer}"
+                  data-url="${encodeURIComponent(source)}">
+                  ${active ? "♥ Saved" : "♡ Favorite"}
+                </button>
+              </div>
+            </div>
+
+            <div class="content">
+              <h3>${photographer}</h3>
+              <p>Live preview available. Download the selected quality.</p>
+              <div class="card-actions">
+                <a class="btn btn-primary" href="${source}" target="_blank" rel="noopener">Open</a>
+                <button class="btn btn-secondary"
+                  data-action="download"
+                  data-url="${encodeURIComponent(source)}"
+                  data-filename="pexels-video-${video.id}.mp4">
+                  ⬇ Download
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadContent() {
+      const query = (searchInput.value || state.query || "nature").trim();
+      state.query = query;
+
+      loadingState(state.mode === "photos" ? "Loading Photos..." : "Loading Videos...");
+
+      try {
+        const endpoint = state.mode === "photos"
+          ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12`
+          : `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=12`;
+
+        const data = await fetchWithCache(endpoint);
+
+        if (state.mode === "photos") renderPhotos(data.photos || []);
+        else renderVideos(data.videos || []);
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        errorState("Check your API key, internet connection, or Pexels limits.");
+      }
+    }
+
+    function debounceLoad() {
+      clearTimeout(state.debounceTimer);
+      state.debounceTimer = setTimeout(loadContent, 250);
+    }
+
+    function clearCacheAndReload() {
+      state.cache.clear();
+      loadContent();
+    }
+
+    grid.addEventListener("click", async (e) => {
+      const favBtn = e.target.closest('[data-action="favorite"]');
+      if (favBtn) {
+        const type = favBtn.dataset.type;
+        const id = favBtn.dataset.id;
+        const title = favBtn.dataset.title || "";
+        const creator = favBtn.dataset.creator || "";
+        const url = decodeURIComponent(favBtn.dataset.url || "");
+
+        toggleFavorite({ type, id, title, creator, url }, favBtn);
+        return;
+      }
+
+      const downloadBtn = e.target.closest('[data-action="download"]');
+      if (downloadBtn) {
+        const url = decodeURIComponent(downloadBtn.dataset.url || "");
+        const filename = downloadBtn.dataset.filename || "download";
+        if (url) await downloadFile(url, filename);
+      }
+    });
+
+    photosTab.addEventListener("click", () => {
+      setMode("photos");
+      loadContent();
+    });
+
+    videosTab.addEventListener("click", () => {
+      setMode("videos");
+      loadContent();
+    });
+
+    refreshBtn.addEventListener("click", async () => {
+      refreshBtn.disabled = true;
+      refreshBtn.innerHTML = "⏳ Refreshing...";
+      clearCacheAndReload();
+      setTimeout(() => {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = "↻ Refresh";
+      }, 500);
+    });
+
+    topicButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        topicButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.query = btn.dataset.topic;
+        searchInput.value = state.query;
+        loadContent();
+      });
+    });
+
+    searchInput.addEventListener("input", debounceLoad);
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loadContent();
+    });
+
+    photoQuality.addEventListener("change", () => {
+      if (state.mode === "photos") loadContent();
+    });
+
+    videoQuality.addEventListener("change", () => {
+      if (state.mode === "videos") loadContent();
+    });
+
+    themeBtn.addEventListener("click", () => {
+      const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
+      applyTheme(nextTheme);
+    });
+
+    (function init(){
+      incrementVisitorCount();
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || "dark";
+      applyTheme(savedTheme);
+      updateStats();
+      setMode("photos");
+      loadContent();
+    })();
+  </script>
+
+<!-- AD CHAT SECTION -->
+<section id="adchat" class="container">
+  <h2>💬 AD CHAT</h2>
+
+  <div id="chatBox"></div>
+
+  <div class="chat-input-row">
+    <input id="msg" placeholder="Type message..." />
+    <button onclick="sendMsg()">Send</button>
+  </div>
+</section>
+
+
+
+  <script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDw1-bG-14VgqVUBvBoeUHJlpKTgAgvKzU",
+  authDomain: "ad-chat-8241d.firebaseapp.com",
+  projectId: "ad-chat-8241d",
+  storageBucket: "ad-chat-8241d.firebasestorage.app",
+  messagingSenderId: "891838901312",
+  appId: "1:891838901312:web:32d1961b65a4b4518243a5",
+  measurementId: "G-4H94Y6WY65"
+};
+
+// Init Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Elements
+const chatBox = document.getElementById("chatBox");
+const msgInput = document.getElementById("msg");
+
+// Send Message
+window.sendMsg = async function () {
+
+  const text = msgInput.value;
+
+  if(text.trim() === "") return;
+
+  await addDoc(collection(db, "messages"), {
+    text: text,
+    time: Date.now()
+  });
+
+  msgInput.value = "";
+};
+
+// Receive Messages Realtime
+const q = query(
+  collection(db, "messages"),
+  orderBy("time")
+);
+
+onSnapshot(q, (snapshot) => {
+
+  chatBox.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    chatBox.innerHTML += `
+      <div class="chat-message">
+        ${data.text}
+      </div>
+    `;
+  });
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+</script>
+
+</body>
+</html>
